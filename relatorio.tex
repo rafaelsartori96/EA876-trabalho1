@@ -1,0 +1,51 @@
+% Rafael Sartori M. dos Santos, 186154
+% Letícia Mayumi A. Tateishi, 201454
+\documentclass[brazilian,a4paper,twocolumn]{article}
+
+% Título
+\title{EA876 -- Trabalho 1}
+\author{Letícia Mayumi A. Tateishi, 201454 \\Rafael Sartori M. Santos, 186154}
+\date{26 de abril de 2019}
+
+% Configuração do documento
+\setlength{\parskip}{3pt}
+\usepackage[utf8]{inputenc} % tipo de documento UTF-8
+\usepackage{mathtools} % permitir expressões matemáticas
+\usepackage{babel} % configuração da lingua portuguesa
+\usepackage{caption} % para legenda de tabelas e figuras
+\usepackage{cleveref} % para referenciar tabelas e figuras melhor
+\usepackage{indentfirst} % indentação de todo primeiro parágrafo
+
+\newcommand{\s}{\;\;}
+
+% Início do documento
+\begin{document}
+
+\maketitle
+
+\section{Introdução}
+
+    Neste trabalho, desenvolvemos um compilador de expressões matemáticas para linguagem de montagem de ARM. Consideramos, nas expressões matemáticas, apenas números inteiros e parênteses, com as operações de soma, subtração e multiplicação. A partir da entrada, utilizamos Flex e Bison para imprimir no terminal um código em assembly de ARM que retorna em R0 o resultado dos cálculos matemáticos.
+    
+\section{Método}
+    
+    Inicialmente, determinamos os tokens necessários para o código Flex: \texttt{INT, SOMA, SUBTRACAO, MULTIPLICACAO, EOL, ABRE\_PAR} e \texttt{FECHA\_PAR}. A partir desses tokens, priorizamos a operação de multiplicação em relação à soma e à subtração e desenvolvemos a seguinte gramática livre de contexto:
+    
+    $P \xrightarrow{} E \s \texttt{EOL}$
+    
+    $E \xrightarrow{} \texttt{INT}$
+    
+    $E \xrightarrow{} \texttt{ABRE\_PAR} \s E \s \texttt{FECHA\_PAR}$
+    
+    $E \xrightarrow{} E \s \texttt{MULTIPLICACAO} \s E$
+    
+    $E \xrightarrow{} E \s \texttt{SOMA} \s E$
+    
+    $E \xrightarrow{} E \s \texttt{SUBTRACAO} \s E$
+    
+
+    
+\section{Resultados}
+
+
+\end{document}
