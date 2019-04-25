@@ -4,7 +4,7 @@
 
 % Título
 \title{EA876 -- Trabalho 1}
-\author{Letícia Mayumi A. Tateishi, 201454 \\Rafael Sartori M. Santos, 186154}
+\author{Letícia Mayumi A. Tateishi, 201454\\Rafael Sartori M. Santos, 186154}
 \date{26 de abril de 2019}
 
 % Configuração do documento
@@ -25,27 +25,53 @@
 
 \section{Introdução}
 
-    Neste trabalho, desenvolvemos um compilador de expressões matemáticas para linguagem de montagem de ARM. Consideramos, nas expressões matemáticas, apenas números inteiros e parênteses, com as operações de soma, subtração e multiplicação. A partir da entrada, utilizamos Flex e Bison para imprimir no terminal um código em assembly de ARM que retorna em R0 o resultado dos cálculos matemáticos.
-    
-\section{Método}
-    
-    Inicialmente, determinamos os tokens necessários para o código Flex: \texttt{INT, SOMA, SUBTRACAO, MULTIPLICACAO, EOL, ABRE\_PAR} e \texttt{FECHA\_PAR}. A partir desses tokens, priorizamos a operação de multiplicação em relação à soma e à subtração e desenvolvemos a seguinte gramática livre de contexto:
-    
-    $P \xrightarrow{} E \s \texttt{EOL}$
-    
-    $E \xrightarrow{} \texttt{INT}$
-    
-    $E \xrightarrow{} \texttt{ABRE\_PAR} \s E \s \texttt{FECHA\_PAR}$
-    
-    $E \xrightarrow{} E \s \texttt{MULTIPLICACAO} \s E$
-    
-    $E \xrightarrow{} E \s \texttt{SOMA} \s E$
-    
-    $E \xrightarrow{} E \s \texttt{SUBTRACAO} \s E$
-    
+    Neste trabalho, desenvolvemos um compilador de expressões matemáticas para linguagem de montagem de ARM. Consideramos, nas expressões matemáticas, apenas números inteiros e parênteses, com as operações de soma, subtração e multiplicação. A partir da entrada, utilizamos Flex e Bison para imprimir no terminal um código assembly de ARM que termina com o resultado dos cálculos matemáticos no registrador \texttt{r0}.
 
-    
+\section{Método}
+
+    Inicialmente, determinamos os tokens necessários para o código Flex: \texttt{INT ($-?[0-9]+$), SOMA ($+$), SUBTRACAO ($-$), MULTIPLICACAO ($*$), EOL (\textbackslash{}n), ABRE\_PAR (()} e \texttt{FECHA\_PAR ())}. A partir desses tokens, priorizamos a operação de multiplicação em relação à soma e à subtração e desenvolvemos a seguinte gramática livre de contexto:
+
+    $P \xrightarrow{} E \s \texttt{EOL}$
+
+    $E \xrightarrow{} \texttt{INT}$
+
+    $E \xrightarrow{} \texttt{ABRE\_PAR} \s E \s \texttt{FECHA\_PAR}$
+
+    $E \xrightarrow{} E \s \texttt{MULTIPLICACAO} \s E$
+
+    $E \xrightarrow{} E \s \texttt{SOMA} \s E$
+
+    $E \xrightarrow{} E \s \texttt{SUBTRACAO} \s E$
+
+    Na gramática, $P$ representa o programa e $E$ representa uma expressão.
+
+    A ideia principal que possibilita o desenvolvimento do código assembly de ARM é o uso da pilha para armazenar os inteiros iniciais que foram encontrados e os resultados parciais das operações assim que foram calculados, pois não haveria registradores suficientes para vários parêntesis aninhados.
+
+    Para isso, o código ARM produzido para o caso em que a expressão é um inteiro deve empilhar o registrador \texttt{r0} que deve possuir seu valor. Já para casos de expressões com operações (seja soma, subtração ou multiplicação), devemos desempilhar dois inteiros para os registradores \texttt{r0} e \texttt{r1}, fazer a operação, armazená-la em \texttt{r0} e empilhar o resultado. Dessa maneira, garantimos que os resultados parciais e o resultado final estarão sempre em \texttt{r0}.
+
 \section{Resultados}
 
+    Como saída, o programa imprime o código em linguagem de montagem de ARM que, quando compilado e executado, termina com o resultado da expressão matemática dada como entrada em \texttt{r0}.
+
+    Por exemplo, a expressão $ 2 * (1 + (-3)) $ produz o seguinte código, que foi comentado posteriormente para entendimento humano:
+
+\begin{verbatim}
+    ldr r0, =2          ; carrega 2
+    str r0, [sp, #4]!   ; empilha 2
+    ldr r0, =1          ; carrega 1
+    str r0, [sp, #4]!   ; empilha 1
+    ldr r0, =-3         ; carrega -3
+    str r0, [sp, #4]!   ; empilha -3
+    ldr r0, [sp], #-4   ; desempilha -3
+    ldr r1, [sp], #-4   ; desempilha 1
+    add r0, r0, r1      ; soma 1 com -3
+    str r0, [sp, #4]!   ; empilha -2
+    ldr r0, [sp], #-4   ; desempilha -2
+    ldr r1, [sp], #-4   ; desempilha 2
+    bl multiplicar      ; multiplica -2*2
+    str r0, [sp, #4]!   ; empilha -4
+    end                 ; r0 mantém -4
+    ; função multiplicar anexa ao fim
+\end{verbatim}
 
 \end{document}
