@@ -47,7 +47,7 @@
 
     A ideia principal que possibilita o desenvolvimento do código assembly de ARM é o uso da pilha para armazenar os inteiros iniciais que foram encontrados e os resultados parciais das operações assim que foram calculados, pois não haveria registradores suficientes para vários parêntesis aninhados.
 
-    Para isso, o código ARM produzido para o caso em que a expressão é um inteiro deve empilhar o registrador \texttt{r0} que deve possuir seu valor. Já para casos de expressões com operações (seja soma, subtração ou multiplicação), devemos desempilhar dois inteiros para os registradores \texttt{r0} e \texttt{r1}, fazer a operação, armazená-la em \texttt{r0} e empilhar o resultado. Dessa maneira, garantimos que os resultados parciais e o resultado final estarão sempre em \texttt{r0}.
+    Para isso, o código ARM produzido para o caso em que a expressão é um inteiro deve empilhar o registrador \texttt{r0} que deve possuir seu valor. Já para casos de expressões com operações (soma, subtração ou multiplicação), devemos desempilhar dois inteiros para os registradores \texttt{r0} e \texttt{r1}, fazer a operação, armazenar seu resultado em \texttt{r0} e empilhá-lo. Dessa maneira, garantimos que os resultados parciais e o resultado final estarão sempre em \texttt{r0}.
 
 \section{Resultados}
 
