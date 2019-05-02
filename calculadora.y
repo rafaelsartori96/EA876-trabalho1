@@ -61,7 +61,7 @@ EXPRESSAO:
         //printf("Encontrei subtração: %d - %d = %d\n", $1, $3, $$);
         printf("ldr r0, [sp], #-4\n");
         printf("ldr r1, [sp], #-4\n");
-        printf("sub r0, r0, r1\n");
+        printf("sub r0, r1, r0\n");
         printf("str r0, [sp, #4]!\n");
     }
 
