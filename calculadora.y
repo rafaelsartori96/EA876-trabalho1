@@ -1,21 +1,28 @@
 %{
 #include <stdio.h>
+#include <stdlib.h>
 
 void yyerror(char *c);
 int yylex(void);
+void mprintf(char *s);
+void realocar();
+
+char *saida = NULL;
+int tamanho = 0;
 
 %}
 
-%token INT SOMA SUBTRACAO MULTIPLICACAO EOL ABRE_PAR FECHA_PAR
+%token INT SOMA SUBTRACAO MULTIPLICACAO ABRE_PAR FECHA_PAR
 %left SOMA SUBTRACAO
 %left MULTIPLICACAO
 
 %%
 
 PROGRAMA:
-    EXPRESSAO EOL {
+    EXPRESSAO {
         printf("end\n");
         printf("; Resultado: %d\n", $1);
+	    return 0;
     }
     ;
 
@@ -23,6 +30,13 @@ PROGRAMA:
 EXPRESSAO:
     INT {
         $$ = $1;
+        //printf("encontrei inteiro: %d\n", $$);
+        printf("ldr r0, =%d\n", $$);
+        printf("str r0, [sp, #4]!\n");
+    }
+
+    | SUBTRACAO INT {
+        $$ = -$2;
         //printf("encontrei inteiro: %d\n", $$);
         printf("ldr r0, =%d\n", $$);
         printf("str r0, [sp, #4]!\n");
@@ -67,7 +81,37 @@ void yyerror(char *s) {
     fprintf(stderr, "%s\n", s);
 }
 
+void mprintf(char *s) {
+    
+}
+
+void realocar() {
+    char *string_antiga = saida;
+
+    tamanho *= 2;
+    saida = calloc(tamanho, sizeof(char));
+    if (saida == NULL) {
+        fprintf(stderr, "Falha ao alocar memória para saída!\n");
+        exit(-1);
+    }
+
+    int i = 0;
+    while (string_antiga[i] != '\0'){
+    	saida[i] = string_antiga[i];
+    	i++;
+    }
+
+    free(string_antiga);
+}
+
 int main() {
+    tamanho = 1024;
+    saida = calloc(tamanho, sizeof(char));
+    if (saida == NULL) {
+        fprintf(stderr, "Falha ao alocar memória para saída!\n");
+        return -1;
+    }
+
     yyparse();
 
     printf("; função para executar multiplicação de r0 com r1\n");

@@ -7,8 +7,12 @@
 !ideias.txt
 !membros_do_grupo.txt
 !README.md
+!test.sh
+!simula.sh
+!visual_headless.jar
 
 !*.tex
 !*.y
 !*.l
-
+!*.out
+!*.in

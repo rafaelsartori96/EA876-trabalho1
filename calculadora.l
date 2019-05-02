@@ -10,7 +10,7 @@ void yyerror(char *);
 
 %%
 
--?[0-9]+    {
+[0-9]+    {
     yylval = atoi(yytext);
     return INT;
 }
@@ -35,11 +35,7 @@ void yyerror(char *);
     return FECHA_PAR;
 }
 
-\n      {
-    return EOL;
-}
-
-[ \t]+ ;
+[ \t\n]+ ;
 
 .     {
     yyerror("Token nao reconhecido!\n");
