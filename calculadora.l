@@ -35,7 +35,11 @@ void yyerror(char *);
     return FECHA_PAR;
 }
 
-[ \t\n]+ ;
+\n      {
+    return EOL;
+}
+
+[ \t]+ ;
 
 .     {
     yyerror("Token nao reconhecido!\n");
