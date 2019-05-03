@@ -8,17 +8,17 @@ TEST_SCRIPT = test.sh
 VERBOSE ?= 1
 
 
-all: lex.yy.c y.tab.c
-	$(CC) -o $(MAIN) $(FLAGS) lex.yy.c y.tab.c
+all: ./src/lex.yy.c ./src/y.tab.c
+	$(CC) -o ./src/$(MAIN) $(FLAGS) ./src/lex.yy.c ./src/y.tab.c
 
-lex.yy.c: calculadora.l
-	flex calculadora.l
+./src/lex.yy.c: ./src/calculadora.l
+	flex ./src/calculadora.l
 
-y.tab.c: calculadora.y
-	bison -dy calculadora.y
+./src/y.tab.c: ./src/calculadora.y
+	bison -dy ./src/calculadora.y
 
 test: all
-	$(BASH) $(TEST_SCRIPT) ./main $(VERBOSE)
+	$(BASH) $(TEST_SCRIPT) ./src/main $(VERBOSE)
 
 clean:
-	rm $(MAIN) lex.yy.c y.tab.h y.tab.c
+	rm ./src/$(MAIN) src/lex.yy.c src/y.tab.h src/y.tab.c

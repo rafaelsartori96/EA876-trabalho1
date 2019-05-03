@@ -3,7 +3,7 @@
 
 !Makefile
 !.gitignore
-!multiplicar.s
+!src/multiplicar.s
 !ideias.txt
 !membros_do_grupo.txt
 !README.md
