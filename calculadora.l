@@ -1,12 +1,12 @@
-
 %{
+/* Letícia Tateishi, Rafael Sartori */
+
 #include <stdlib.h>
 #include "y.tab.h"
 
 void yyerror(char *);
 
 %}
-
 
 %%
 

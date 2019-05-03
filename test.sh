@@ -1,5 +1,6 @@
 # Script para testes de unidade automaticos
-#tem varios asteriscos ****** onde eu mudei alguma coisa
+
+# Retirado do prof. Tiago Tavares, alterado por Daniel Benvenutti
 
 # Configuracao: escolhe se o programa retonara mensagens teste-a-teste
 verbose=$2
@@ -35,16 +36,16 @@ do
 
   # Encontra o nome do arquivo relacionado a saida do teste
   o=`echo $t | sed $sedexpression`
-  
-  #Encontra o nome do arquivo relacionado ao assembly ******
+
+  # Encontra o nome do arquivo relacionado ao codigo ARM
   ASM=`echo $t | sed $sedexpression2`
 
   # Executa o programa que foi compilado usando o arquivo de teste.in como
-  # entrada *******
+  # entrada
   $program < $t > $ASM
 
   # Verifica se a diferenca entre a saida encontrada e a saida desejada
-  # eh uma string de comprimento nao-zero ******
+  # é uma string de comprimento nao-zero
   d=`./simula.sh $ASM | diff  $o -`
   #rm $$.out
   if [ -n "$d" ]; then

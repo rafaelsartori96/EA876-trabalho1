@@ -1,4 +1,6 @@
 %{
+/* Letícia Tateishi, Rafael Sartori */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -7,12 +9,15 @@ void yyerror(char *c);
 int yylex(void);
 void realocar();
 
+// Para impressão da saída
 char *saida = NULL;
 int tamanho = 0;
 int usado = 0;
 
+// Para determinar se devemos imprimir a saída
 int error = 0;
 
+// Macro para concatenar o printf à saída ainda não impressa
 #define my_printf(...) \
     if (usado >= ((tamanho * 3) / 4)) { \
         realocar(); \
@@ -31,7 +36,7 @@ PROGRAMA:
     EXPRESSAO EOL {
         my_printf("end\n");
         my_printf("; Resultado: %d\n", $1);
-	    return 0;
+        return 0;
     }
     ;
 
@@ -48,6 +53,13 @@ EXPRESSAO:
         $$ = -$2;
         //printf("encontrei inteiro: %d\n", $$);
         my_printf("ldr r0, =%d\n", $$);
+        my_printf("str r0, [sp, #4]!\n");
+    }
+
+    | SUBTRACAO EXPRESSAO {
+        $$ = -$2;
+        my_printf("ldr r0, [sp], #-4\n");
+        my_printf("rsb r0, r0, #0\n");
         my_printf("str r0, [sp, #4]!\n");
     }
 
@@ -92,8 +104,10 @@ void yyerror(char *s) {
 }
 
 void realocar() {
+    /* Guardamos ponteiro para string antiga */
     char *string_antiga = saida;
 
+    /* Alocamos a nova string com o dobro do tamanho */
     tamanho *= 2;
     saida = calloc(tamanho, sizeof(char));
     if (saida == NULL) {
@@ -101,16 +115,19 @@ void realocar() {
         exit(-1);
     }
 
+    /* Copiamos à nova string */
     int i = 0;
     while (string_antiga[i] != '\0'){
-    	saida[i] = string_antiga[i];
-    	i++;
+        saida[i] = string_antiga[i];
+        i++;
     }
 
+    /* Liberamos memória já não mais utilizada */
     free(string_antiga);
 }
 
 int main() {
+    /* Alocamos espaço para a saída inicial com 1024 caracteres */
     tamanho = 1024;
     saida = calloc(tamanho, sizeof(char));
     if (saida == NULL) {
@@ -118,11 +135,13 @@ int main() {
         return -1;
     }
 
+    /* Conferimos se houve erro durante execução */
     if (yyparse() != 0 || error != 0) {
-        fprintf(stderr, "erro de sintaxe!\n");
+        fprintf(stderr, "Erro durante execução!\n");
         return -1;
     }
 
+    /* Imprimimos a função de multiplicar */
     my_printf("; função para executar multiplicação de r0 com r1\n");
     my_printf("multiplicar\n");
     my_printf("\t;;; caso 1: algum dos números é zero\n");
@@ -186,7 +205,7 @@ int main() {
     my_printf("\t; retornamos\n");
     my_printf("\tmov pc, lr\n");
 
-
+    /* Finalmente, imprimimos a saída e liberamos sua memória */
     printf("%s\n", saida);
     free(saida);
 
