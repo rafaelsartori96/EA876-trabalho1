@@ -19,7 +19,7 @@ make
 
 e executamos:
 ```
-./main
+./src/main
 ```
 ou através do `Makefile` com alguns testes preparados:
 ```
