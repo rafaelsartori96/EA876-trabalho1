@@ -56,13 +56,6 @@ EXPRESSAO:
         my_printf("str r0, [sp, #4]!\n");
     }
 
-    | SUBTRACAO INT {
-        $$ = -$2;
-        //printf("encontrei inteiro: %d\n", $$);
-        my_printf("ldr r0, =%d\n", $$);
-        my_printf("str r0, [sp, #4]!\n");
-    }
-
     | ABRE_PAR EXPRESSAO FECHA_PAR {
         $$ = $2;
         //printf("encontrei expressão entre parentesis: %d\n", $$);
