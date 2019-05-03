@@ -49,17 +49,17 @@ EXPRESSAO:
         my_printf("str r0, [sp, #4]!\n");
     }
 
-    | SUBTRACAO INT {
-        $$ = -$2;
-        //printf("encontrei inteiro: %d\n", $$);
-        my_printf("ldr r0, =%d\n", $$);
-        my_printf("str r0, [sp, #4]!\n");
-    }
-
     | SUBTRACAO EXPRESSAO {
         $$ = -$2;
         my_printf("ldr r0, [sp], #-4\n");
         my_printf("rsb r0, r0, #0\n");
+        my_printf("str r0, [sp, #4]!\n");
+    }
+
+    | SUBTRACAO INT {
+        $$ = -$2;
+        //printf("encontrei inteiro: %d\n", $$);
+        my_printf("ldr r0, =%d\n", $$);
         my_printf("str r0, [sp, #4]!\n");
     }
 
