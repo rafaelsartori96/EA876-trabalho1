@@ -10,7 +10,7 @@
 % Configuração do documento
 \setlength{\parskip}{3pt} % espaço entre parágrafos
 \usepackage{geometry} % alterar geometria do papel
-\geometry{a4paper,left=2.5cm,right=2.5cm,top=2cm,bottom=3cm} % menor margem
+\geometry{a4paper,left=2.5cm,right=2.5cm,top=2cm,bottom=2cm} % menor margem
 \usepackage[utf8]{inputenc} % tipo de documento UTF-8
 \usepackage{mathtools} % permitir expressões matemáticas
 \usepackage{babel} % configuração da lingua portuguesa
@@ -31,11 +31,15 @@
 
 \section{Método}
 
-    Inicialmente, determinamos os tokens necessários para o código Flex: \texttt{INT ($-?[0-9]+$), SOMA ($+$), SUBTRACAO ($-$), MULTIPLICACAO ($*$), EOL (\textbackslash{}n), ABRE\_PAR (()} e \texttt{FECHA\_PAR ())}. A partir desses tokens, priorizamos a operação de multiplicação em relação à soma e à subtração e desenvolvemos a seguinte gramática livre de contexto:
+    Inicialmente, determinamos os tokens necessários para o código Flex: \texttt{INT ($[0-9]+$), SOMA ($+$), SUBTRACAO ($-$), MULTIPLICACAO ($*$), EOL (\textbackslash{}n), ABRE\_PAR (()} e \texttt{FECHA\_PAR ())}. A partir desses tokens, priorizamos a operação de multiplicação em relação à soma e à subtração e desenvolvemos a seguinte gramática livre de contexto:
 
     $P \xrightarrow{} E \s \texttt{EOL}$
 
     $E \xrightarrow{} \texttt{INT}$
+
+    $E \xrightarrow{} \texttt{SUBTRACAO} \s \texttt{INT}$
+
+    $E \xrightarrow{} \texttt{SUBTRACAO} \s E$
 
     $E \xrightarrow{} \texttt{ABRE\_PAR} \s E \s \texttt{FECHA\_PAR}$
 
@@ -50,8 +54,6 @@
     A ideia principal que possibilita o desenvolvimento do código assembly de ARM é o uso da pilha para armazenar os inteiros iniciais que foram encontrados e os resultados parciais das operações assim que foram calculados, pois não haveria registradores suficientes para vários parênteses aninhados.
 
     Para isso, o código ARM produzido para o caso em que a expressão é um inteiro deve empilhar o registrador \texttt{r0} que deve possuir seu valor. Já para casos de expressões com operações (soma, subtração ou multiplicação), devemos desempilhar dois inteiros para os registradores \texttt{r0} e \texttt{r1}, fazer a operação, armazenar seu resultado em \texttt{r0} e empilhá-lo. Dessa maneira, garantimos que os resultados parciais e o resultado final estarão sempre em \texttt{r0}.
-
-    %A soma é simples, feita através da instrução \texttt{add r0, r0, r1}. Já a múltiplicação, temos o seguinte algoritmo: iniciando com zero em \texttt{r2}, somamos $1$ se $ \texttt{r0} > 0 $, $-1$ caso contrário, analogamente para \texttt{r1}; em \texttt{r3} e \texttt{r4}, respectivamente, os valores absolutos de \texttt{r0} e \texttt{r1}; trocamos \texttt{r3} e \texttt{r4} de lugar de modo a deixar o maior em \texttt{r3} e o menor em \texttt{r4}; com isso, copiamos \texttt{r3} para \texttt{r5} e fazemos enquanto $ \texttt{r4} > 1 $: sucessivas somas $ \texttt{r3} = \texttt{r3} + \texttt{r5} $ e subtraímos 1 de \texttt{r4}. Após conclusão desse laço, temos em \texttt{r3} o valor absoluto do resultado da multiplicação, usando o que calculamos em \texttt{r2}, identificamos o sinal final da resposta: se \texttt{r2} possui $-2$ ou $2$, a resposta deve possuir sinal positivo, caso possua $0$, a resposta deve possuir sinal negativo.
 
     A soma é simples, feita através da instrução \texttt{add r0, r0, r1}. Já a múltiplicação, temos o seguinte algoritmo que utilizaremos com uma subrotina, usando \textit{branch}:
     \begin{itemize}

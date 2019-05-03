@@ -10,6 +10,7 @@
 !test.sh
 !simula.sh
 !visual_headless.jar
+!relatorio.pdf
 
 !*.tex
 !*.y
