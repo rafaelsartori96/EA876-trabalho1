@@ -23,6 +23,10 @@ e executamos:
 ```
 ou através do `Makefile` com alguns testes preparados:
 ```
+# permissão de execução nos scripts
+chmod +x test.sh
+chmod +x simula.sh
+# executar testes
 make test
 ```
 

@@ -12,10 +12,10 @@ all: ./src/lex.yy.c ./src/y.tab.c
 	$(CC) -o ./src/$(MAIN) $(FLAGS) ./src/lex.yy.c ./src/y.tab.c
 
 ./src/lex.yy.c: ./src/calculadora.l
-	flex ./src/calculadora.l
+	flex -o ./src/lex.yy.c ./src/calculadora.l
 
 ./src/y.tab.c: ./src/calculadora.y
-	bison -dy ./src/calculadora.y
+	bison -dy ./src/calculadora.y -o ./src/y.tab.c
 
 test: all
 	$(BASH) $(TEST_SCRIPT) ./src/main $(VERBOSE)
