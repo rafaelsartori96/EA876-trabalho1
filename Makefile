@@ -1,6 +1,6 @@
 MAIN = main
 CC = gcc
-FLAGS = -lfl -Wall
+FLAGS = -Wall
 
 # Pastas
 SOURCES = ./src
@@ -13,7 +13,7 @@ VERBOSE ?= 1
 
 
 all: $(OUTPUT)/lex.yy.c $(OUTPUT)/y.tab.c
-	$(CC) -o $(OUTPUT)/$(MAIN) $(FLAGS) $(OUTPUT)/lex.yy.c $(OUTPUT)/y.tab.c
+	$(CC) -o $(OUTPUT)/$(MAIN) $(FLAGS) $(OUTPUT)/y.tab.c $(OUTPUT)/lex.yy.c
 
 $(OUTPUT)/lex.yy.c: $(SOURCES)/calculadora.l
 	flex -o $(OUTPUT)/lex.yy.c $(SOURCES)/calculadora.l
