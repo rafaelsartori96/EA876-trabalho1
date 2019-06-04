@@ -19,7 +19,7 @@ make
 
 e executamos:
 ```
-./src/main
+./out/main
 ```
 ou através do `Makefile` com alguns testes preparados:
 ```
@@ -59,4 +59,4 @@ str r0, [sp, #4]!
 end
 ```
 que retorna o valor 2, quando compilado no VisUAL.
-## 
+##
