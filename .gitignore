@@ -11,6 +11,7 @@
 !simula.sh
 !visual_headless.jar
 !relatorio.pdf
+!out/.exists
 
 !*.tex
 !*.y
