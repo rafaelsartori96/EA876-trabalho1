@@ -2,23 +2,27 @@ MAIN = main
 CC = gcc
 FLAGS = -lfl -Wall
 
+# Pastas
+SOURCES = ./src
+OUTPUT = ./out
+
 # Macros para teste
 BASH = sh
 TEST_SCRIPT = test.sh
 VERBOSE ?= 1
 
 
-all: ./src/lex.yy.c ./src/y.tab.c
-	$(CC) -o ./src/$(MAIN) $(FLAGS) ./src/lex.yy.c ./src/y.tab.c
+all: $(OUTPUT)/lex.yy.c $(OUTPUT)/y.tab.c
+	$(CC) -o $(OUTPUT)/$(MAIN) $(FLAGS) $(OUTPUT)/lex.yy.c $(OUTPUT)/y.tab.c
 
-./src/lex.yy.c: ./src/calculadora.l
-	flex -o ./src/lex.yy.c ./src/calculadora.l
+$(OUTPUT)/lex.yy.c: $(SOURCES)/calculadora.l
+	flex -o $(OUTPUT)/lex.yy.c $(SOURCES)/calculadora.l
 
-./src/y.tab.c: ./src/calculadora.y
-	bison -dy ./src/calculadora.y -o ./src/y.tab.c
+$(OUTPUT)/y.tab.c: $(SOURCES)/calculadora.y
+	bison -dy $(SOURCES)/calculadora.y -o $(OUTPUT)/y.tab.c
 
 test: all
-	$(BASH) $(TEST_SCRIPT) ./src/main $(VERBOSE)
+	$(BASH) $(TEST_SCRIPT) $(OUTPUT)/main $(VERBOSE)
 
 clean:
-	rm ./src/$(MAIN) src/lex.yy.c src/y.tab.h src/y.tab.c
+	rm $(OUTPUT)/*
